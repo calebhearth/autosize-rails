@@ -18,7 +18,9 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    $(document).ready(function(){
+      $('textarea').autosize();
+    });
 
 ## Contributing
 
