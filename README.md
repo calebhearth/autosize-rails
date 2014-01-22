@@ -1,6 +1,6 @@
 # Autosize::Rails
 
-TODO: Write a gem description
+This gem packages `jquery-autosize` plugin for jQuery for the Rails 3.1+ asset pipeline.
 
 ## Installation
 
