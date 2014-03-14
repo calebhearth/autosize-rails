@@ -1,5 +1,5 @@
 /*!
-	Autosize v1.18.4 - 2014-01-11
+  Autosize v1.18.6 - 2014-03-13
 	Automatically adjust textarea height based on user input.
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/autosize
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -8,6 +8,7 @@
 	var
 	defaults = {
 		className: 'autosizejs',
+    id: 'autosizejs',
 		append: '',
 		callback: false,
 		resizeDelay: 10,
@@ -120,6 +121,7 @@
 
 				mirrored = ta;
 				mirror.className = options.className;
+        mirror.id = options.id;
 				maxHeight = parseInt($ta.css('maxHeight'), 10);
 
 				// mirror is a duplicate textarea located off-screen that
@@ -130,7 +132,8 @@
 				$.each(typographyStyles, function(i,val){
 					styles[val] = $ta.css(val);
 				});
-				$(mirror).css(styles);
+
+        $(mirror).css(styles).attr('wrap', $ta.attr('wrap'));
 
 				setWidth();
 
@@ -160,7 +163,7 @@
 					// If the textarea is empty, copy the placeholder text into 
 					// the mirror control and use that for sizing so that we 
 					// don't end up with placeholder getting trimmed.
-					mirror.value = ($(ta).attr("placeholder") || '') + options.append;
+          mirror.value = ($ta.attr("placeholder") || '') + options.append;
 				} else {
 					mirror.value = ta.value + options.append;
 				}
