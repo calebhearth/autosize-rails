@@ -17,7 +17,7 @@ task :update do
       resp = http.get(upstream_location)
       File.open(file_location, 'w') { |file| file.write(resp.body) }
     end
-    puts "Please bump the version.rv, commit and open a pull request with the new version. (#{latest_tag['name']})"
+    puts "Please bump the version.rb, commit and open a pull request with the new version. (#{latest_tag['name']})"
   else
     puts "Already up to date. (#{latest_tag['name']})"
   end
