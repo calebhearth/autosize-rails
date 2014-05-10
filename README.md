@@ -15,6 +15,10 @@ And then execute:
 Or install it yourself as:
 
     $ gem install autosize-rails
+    
+Finally, add this to your application.js file:
+    
+    //= require jquery.autosize
 
 ## Usage
 
