@@ -1,5 +1,5 @@
 /*!
-  Autosize v1.18.6 - 2014-03-13
+	Autosize v1.18.8 - 2014-05-20
 	Automatically adjust textarea height based on user input.
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/autosize
 	license: http://www.opensource.org/licenses/mit-license.php
@@ -8,8 +8,8 @@
 	var
 	defaults = {
 		className: 'autosizejs',
-    id: 'autosizejs',
-		append: '',
+		id: 'autosizejs',
+		append: '\n',
 		callback: false,
 		resizeDelay: 10,
 		placeholder: true
@@ -70,7 +70,8 @@
 				resize: ta.style.resize
 			},
 			timeout,
-			width = $ta.width();
+			width = $ta.width(),
+			taResize = $ta.css('resize');
 
 			if ($ta.data('autosize')) {
 				// exit if autosize has already been applied, or if the textarea is the mirror element.
@@ -88,9 +89,14 @@
 			$ta.css({
 				overflow: 'hidden',
 				overflowY: 'hidden',
-				wordWrap: 'break-word', // horizontal overflow is hidden, so break-word is necessary for handling words longer than the textarea width
-				resize: ($ta.css('resize') === 'none' || $ta.css('resize') === 'vertical') ? 'none' : 'horizontal'
+				wordWrap: 'break-word' // horizontal overflow is hidden, so break-word is necessary for handling words longer than the textarea width
 			});
+
+			if (taResize === 'vertical') {
+				$ta.css('resize','none');
+			} else if (taResize === 'both') {
+				$ta.css('resize', 'horizontal');
+			}
 
 			// The mirror width must exactly match the textarea width, so using getBoundingClientRect because it doesn't round the sub-pixel value.
 			// window.getComputedStyle, getBoundingClientRect returning a width are unsupported, but also unneeded in IE8 and lower.
@@ -102,7 +108,7 @@
 
 					width = ta.getBoundingClientRect().width;
 
-					if (width === 0) {
+					if (width === 0 || typeof width !== 'number') {
 						width = parseInt(style.width,10);
 					}
 
@@ -121,7 +127,7 @@
 
 				mirrored = ta;
 				mirror.className = options.className;
-        mirror.id = options.id;
+				mirror.id = options.id;
 				maxHeight = parseInt($ta.css('maxHeight'), 10);
 
 				// mirror is a duplicate textarea located off-screen that
@@ -132,8 +138,8 @@
 				$.each(typographyStyles, function(i,val){
 					styles[val] = $ta.css(val);
 				});
-
-        $(mirror).css(styles).attr('wrap', $ta.attr('wrap'));
+				
+				$(mirror).css(styles).attr('wrap', $ta.attr('wrap'));
 
 				setWidth();
 
@@ -163,7 +169,7 @@
 					// If the textarea is empty, copy the placeholder text into 
 					// the mirror control and use that for sizing so that we 
 					// don't end up with placeholder getting trimmed.
-          mirror.value = ($ta.attr("placeholder") || '') + options.append;
+					mirror.value = ($ta.attr("placeholder") || '') + options.append;
 				} else {
 					mirror.value = ta.value + options.append;
 				}
