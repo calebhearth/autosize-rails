@@ -1,5 +1,5 @@
 /*!
-	Autosize 1.18.15
+	Autosize 1.18.17
 	license: MIT
 	http://www.jacklmoore.com/autosize
 */
@@ -98,23 +98,18 @@
 				$ta.css('resize', 'horizontal');
 			}
 
-			// The mirror width must exactly match the textarea width, so using getBoundingClientRect because it doesn't round the sub-pixel value.
-			// window.getComputedStyle, getBoundingClientRect returning a width are unsupported, but also unneeded in IE8 and lower.
+			// getComputedStyle is preferred here because it preserves sub-pixel values, while jQuery's .width() rounds to an integer.
 			function setWidth() {
 				var width;
-				var style = window.getComputedStyle ? window.getComputedStyle(ta, null) : false;
+				var style = window.getComputedStyle ? window.getComputedStyle(ta, null) : null;
 
 				if (style) {
-
-					width = ta.getBoundingClientRect().width;
-
-					if (width === 0 || typeof width !== 'number') {
-						width = parseFloat(style.width);
+					width = parseFloat(style.width);
+					if (style.boxSizing === 'border-box' || style.webkitBoxSizing === 'border-box' || style.mozBoxSizing === 'border-box') {
+						$.each(['paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth'], function(i,val){
+							width -= parseFloat(style[val]);
+						});
 					}
-
-					$.each(['paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth'], function(i,val){
-						width -= parseFloat(style[val]);
-					});
 				} else {
 					width = $ta.width();
 				}
@@ -157,7 +152,7 @@
 			// Using mainly bare JS in this function because it is going
 			// to fire very often while typing, and needs to very efficient.
 			function adjust() {
-				var height, original;
+				var height, originalHeight;
 
 				if (mirrored !== ta) {
 					initMirror();
@@ -176,7 +171,7 @@
 
 				mirror.value += options.append || '';
 				mirror.style.overflowY = ta.style.overflowY;
-				original = parseFloat(ta.style.height);
+				originalHeight = parseFloat(ta.style.height) || 0;
 
 				// Setting scrollTop to zero is needed in IE8 and lower for the next step to be accurately applied
 				mirror.scrollTop = 0;
@@ -198,7 +193,7 @@
 
 				height += boxOffset;
 
-				if (original !== height) {
+				if (Math.abs(originalHeight - height) > 1/100) {
 					ta.style.height = height + 'px';
 
 					// Trigger a repaint for IE8 for when ta is nested 2 or more levels inside an inline-block

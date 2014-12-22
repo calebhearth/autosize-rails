@@ -1,5 +1,5 @@
 module Autosize
   module Rails
-    VERSION = "1.18.15"
+    VERSION = "1.18.17"
   end
 end
