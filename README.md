@@ -1,3 +1,5 @@
+# THIS IS OUTDATED AND UNSUPPORTED. PLEASE USE SOMETHING ELSE.
+
 # Autosize::Rails
 
 This gem packages `jquery-autosize` plugin for jQuery for the Rails 3.1+ asset pipeline.
